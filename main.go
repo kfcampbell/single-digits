@@ -15,9 +15,22 @@ func main() {
 	}
 }
 
-// getScoreFromText extracts the time from the boilerplate NYT text
+// GetText returns the text from the image.
+func GetText(imgPath string) (string, error) {
+	client := gosseract.NewClient()
+	defer client.Close()
+
+	client.SetImage(imgPath)
+	text, err := client.Text()
+	if err != nil {
+		return "", err
+	}
+	return text, nil
+}
+
+// GetScoreFromText extracts the time from the boilerplate NYT text
 // and returns it in seconds.
-func getScoreFromText(text string) (time.Duration, error) {
+func GetScoreFromText(text string) (time.Duration, error) {
 	const dividerText = "You solved a Mini puzzle in "
 	s := strings.Split(text, dividerText)
 	scoreText := s[1]
@@ -49,27 +62,61 @@ func getScoreFromText(text string) (time.Duration, error) {
 func run() error {
 	client := gosseract.NewClient()
 	defer client.Close()
-	client.SetImage("testdata/one-minute-forty-two-seconds.jpeg")
-	text, err := client.Text()
+
+	text, err := GetText("testdata/one-minute-forty-two-seconds.jpeg")
 	if err != nil {
 		return err
 	}
-	score, err := getScoreFromText(text)
+	fmt.Printf("%s\n", text)
+	score, err := GetScoreFromText(text)
 	if err != nil {
 		return err
 	}
 	fmt.Printf("score: %v\n", score)
 
-	client.SetImage("testdata/forty-two-seconds.jpeg")
-	text, err = client.Text()
+	text, err = GetText("testdata/forty-two-seconds.jpeg")
 	if err != nil {
 		return err
 	}
-	score, err = getScoreFromText(text)
+	fmt.Printf("%s\n", text)
+	score, err = GetScoreFromText(text)
 	if err != nil {
 		return err
 	}
 	fmt.Printf("score: %v\n", score)
+
+	text, err = GetText("testdata/fifty-seven-seconds-plain.jpeg")
+	if err != nil {
+		return err
+	}
+	fmt.Printf("%s\n", text)
+	/*score, err = GetScoreFromText(text)
+	if err != nil {
+		return err
+	}
+	fmt.Printf("score: %v\n", score)*/
+
+	text, err = GetText("testdata/thirty-six-seconds.jpeg")
+	if err != nil {
+		return err
+	}
+	fmt.Printf("%s\n", text)
+	/*score, err = GetScoreFromText(text)
+	if err != nil {
+		return err
+	}
+	fmt.Printf("score: %v\n", score)*/
+
+	text, err = GetText("testdata/twenty-three-seconds.jpeg")
+	if err != nil {
+		return err
+	}
+	fmt.Printf("%s\n", text)
+	/*score, err = GetScoreFromText(text)
+	if err != nil {
+		return err
+	}
+	fmt.Printf("score: %v\n", score)*/
 
 	return nil
 }
