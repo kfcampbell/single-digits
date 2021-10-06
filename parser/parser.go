@@ -1,14 +1,34 @@
 package parser
 
 import (
+	"fmt"
 	"strings"
 	"time"
 )
 
+// todo(kfcampbell): make parsing logic actually work with test cases
+
 // GetScoreFromText extracts the time from the boilerplate NYT text
 // and returns it in seconds.
 func GetScoreFromText(text string) (time.Duration, error) {
-	const dividerText = "You solved a Mini puzzle in "
+
+	// strip off the colon in the header time if it exists
+	if strings.Contains(text, "puzzle in") {
+		text = text[strings.Index(text, "puzzle in"):]
+	}
+
+	fmt.Printf("trimmed text: %v", text)
+
+	const divider = ":"
+	s := strings.Split(text, divider)
+	if len(s) == 1 {
+		// case: formatted like "You solved a mini puzzle in 35 seconds."
+
+	}
+
+	return 0, fmt.Errorf("could not parse time correctly: not implemented yet")
+
+	/*const dividerText = "You solved a Mini puzzle in "
 	s := strings.Split(text, dividerText)
 	scoreText := s[1]
 	// case when it's formatted like "35 seconds."
@@ -33,5 +53,5 @@ func GetScoreFromText(text string) (time.Duration, error) {
 		}
 
 		return minutes + seconds, nil
-	}
+	}*/
 }
