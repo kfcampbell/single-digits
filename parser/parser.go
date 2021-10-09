@@ -2,6 +2,7 @@ package parser
 
 import (
 	"fmt"
+	"regexp"
 	"strings"
 	"time"
 )
@@ -23,7 +24,16 @@ func GetScoreFromText(text string) (time.Duration, error) {
 	s := strings.Split(text, divider)
 	if len(s) == 1 {
 		// case: formatted like "You solved a mini puzzle in 35 seconds."
+		// regex to get digits: ([0-9]+)
+		r := regexp.MustCompile("[0-9]+")
+		match := r.FindString(text)
+		fmt.Printf("Time: %v", match)
 
+		seconds, err := time.ParseDuration(match + "s")
+		if err != nil {
+			return 0, fmt.Errorf("could not parse time: %v", err)
+		}
+		return seconds, nil
 	}
 
 	return 0, fmt.Errorf("could not parse time correctly: not implemented yet")
