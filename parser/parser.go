@@ -7,8 +7,6 @@ import (
 	"time"
 )
 
-// todo(kfcampbell): make parsing logic actually work with test cases
-
 // GetScoreFromText extracts the time from the boilerplate NYT text
 // and returns it in seconds.
 func GetScoreFromText(text string) (time.Duration, error) {
@@ -20,12 +18,13 @@ func GetScoreFromText(text string) (time.Duration, error) {
 
 	fmt.Printf("trimmed text: %v", text)
 
+	// regex to get digits: ([0-9]+)
+	r := regexp.MustCompile("[0-9]+")
+
 	const divider = ":"
 	s := strings.Split(text, divider)
 	if len(s) == 1 {
 		// case: formatted like "You solved a mini puzzle in 35 seconds."
-		// regex to get digits: ([0-9]+)
-		r := regexp.MustCompile("[0-9]+")
 		match := r.FindString(text)
 		fmt.Printf("Time: %v", match)
 
@@ -36,32 +35,19 @@ func GetScoreFromText(text string) (time.Duration, error) {
 		return seconds, nil
 	}
 
-	return 0, fmt.Errorf("could not parse time correctly: not implemented yet")
+	// expect there to be two time pieces
+	pieces := strings.Split(text, ":")
+	minutesPiece := r.FindString(pieces[0])
+	minutes, err := time.ParseDuration(minutesPiece + "m")
+	if err != nil {
+		return 0, fmt.Errorf("could not parse time: %v", err)
+	}
 
-	/*const dividerText = "You solved a Mini puzzle in "
-	s := strings.Split(text, dividerText)
-	scoreText := s[1]
-	// case when it's formatted like "35 seconds."
-	if strings.Contains(scoreText, "seconds") {
-		timePieces := strings.Split(scoreText, " ")
-		secondsS := timePieces[0]
-		return time.ParseDuration(secondsS + "s")
-	} else { // case when it's formatted like "1:42"
-		timePieces := strings.Split(scoreText, ":")
-		minutesS := timePieces[0]
-		secondsPieces := timePieces[1]
-		secondsS := strings.Split(secondsPieces, ".")
+	secondsPiece := r.FindString(pieces[1])
+	seconds, err := time.ParseDuration(secondsPiece + "s")
+	if err != nil {
+		return 0, fmt.Errorf("could not parse time: %v", err)
+	}
 
-		minutes, err := time.ParseDuration(minutesS + "m")
-		if err != nil {
-			return 0, err
-		}
-
-		seconds, err := time.ParseDuration(secondsS[0] + "s")
-		if err != nil {
-			return 0, err
-		}
-
-		return minutes + seconds, nil
-	}*/
+	return minutes + seconds, nil
 }
