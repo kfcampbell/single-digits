@@ -6,6 +6,8 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"sort"
+	"time"
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/kfcampbell/single-digits/parser"
@@ -31,6 +33,35 @@ func GetText(imgPath string) (string, error) {
 	return text, nil
 }
 
+// todo(kfcampbell): test this function
+func getMostRecentPuzzleAnnouncements(msgs []*discordgo.Message, botId string) (older, newer *discordgo.Message) {
+	// get the two most recent instances of the other bot's messages
+	for _, msg := range msgs {
+		// get the latest messages from the other bot
+		if msg.Author.ID == botId {
+			// case where we haven't found either yet
+			if older == nil {
+				older = msg
+			}
+			// case where we've found the older message first
+			if newer == nil {
+				newer = msg
+			}
+			if older != nil && newer != nil {
+				return older, newer
+			}
+		}
+	}
+	return older, newer
+}
+
+// Score represents a single instance of the crossword puzzle
+type Score struct {
+	Author   string
+	AuthorId string
+	Score    time.Duration
+}
+
 func run() error {
 
 	token := os.Getenv("DISCORD_BOT_TOKEN")
@@ -38,24 +69,44 @@ func run() error {
 		return fmt.Errorf("empty token found! %v", token)
 	}
 
+	dServerId := os.Getenv("DISCORD_SERVER_ID")
+	if dServerId == "" {
+		return fmt.Errorf("empty server ID found! %v", dServerId)
+	}
+
 	dChannelId := os.Getenv("DISCORD_CHANNEL_ID")
 	if dChannelId == "" {
 		return fmt.Errorf("empty channel ID found! %v", dChannelId)
+	}
+
+	otherBotId := os.Getenv("DISCORD_OTHER_BOT_ID")
+	if otherBotId == "" {
+		return fmt.Errorf("empty ID for other bot: %v", otherBotId)
 	}
 
 	bot, err := discordgo.New("Bot " + token)
 	if err != nil {
 		return err
 	}
+
 	msgs, err := bot.ChannelMessages(dChannelId, 100, "", "", "")
 	if err != nil {
 		return err
 	}
-	client := gosseract.NewClient()
-	defer client.Close()
 
-	for _, msg := range msgs {
-		//fmt.Printf("message: %v\n", msg)
+	older, newer := getMostRecentPuzzleAnnouncements(msgs, otherBotId)
+
+	ocr := gosseract.NewClient()
+	defer ocr.Close()
+
+	scoreMsgs, err := bot.ChannelMessages(dChannelId, 100, older.ID, newer.ID, "")
+	if err != nil {
+		return err
+	}
+
+	scores := make([]Score, 0)
+	for _, msg := range scoreMsgs {
+		// case where there's an image
 		if len(msg.Attachments) == 1 {
 			img := msg.Attachments[0]
 
@@ -75,21 +126,39 @@ func run() error {
 				return err
 			}
 
-			err = client.SetImageFromBytes(imgBytes)
+			err = ocr.SetImageFromBytes(imgBytes)
 			if err != nil {
 				return err
 			}
-			text, err := client.Text()
+			text, err := ocr.Text()
 			if err != nil {
 				return err
 			}
-			score, err := parser.GetScoreFromText(text)
+			time, err := parser.GetScoreFromText(text)
 			if err != nil {
 				return err
 			}
-			fmt.Printf("Author: %v, score: %v\n", msg.Author.Username, score)
+			fmt.Printf("Author: %v, time: %v\n", msg.Author.Username, time)
+			score := &Score{
+				Author:   msg.Author.Username,
+				AuthorId: msg.Author.ID,
+				Score:    time,
+			}
+			scores = append(scores, *score)
 		}
 	}
 
+	scores = sortScores(scores)
+	fmt.Printf("winner: %v with a time of %v\n", scores[0].Author, scores[0].Score)
+	fmt.Printf("second place: %v with a time of %v\n", scores[1].Author, scores[1].Score)
+	fmt.Printf("third place: %v with a time of %v\n", scores[2].Author, scores[2].Score)
+
 	return nil
+}
+
+func sortScores(scores []Score) []Score {
+	sort.Slice(scores, func(i, j int) bool {
+		return scores[i].Score > scores[j].Score
+	})
+	return scores
 }
