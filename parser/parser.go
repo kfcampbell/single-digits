@@ -16,8 +16,6 @@ func GetScoreFromText(text string) (time.Duration, error) {
 		text = text[strings.Index(text, "puzzle in"):]
 	}
 
-	fmt.Printf("trimmed text: %v", text)
-
 	// regex to get digits: ([0-9]+)
 	r := regexp.MustCompile("[0-9]+")
 
@@ -26,7 +24,6 @@ func GetScoreFromText(text string) (time.Duration, error) {
 	if len(s) == 1 {
 		// case: formatted like "You solved a mini puzzle in 35 seconds."
 		match := r.FindString(text)
-		fmt.Printf("Time: %v", match)
 
 		seconds, err := time.ParseDuration(match + "s")
 		if err != nil {
