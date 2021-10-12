@@ -1,7 +1,7 @@
 name: post-weekly
 on:
   schedule:
-    - cron: '48 4 * * *'
+    - cron: '55 4 * * *'
   workflow_dispatch:
     inputs:
       tags:
