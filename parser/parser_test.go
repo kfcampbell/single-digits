@@ -41,6 +41,16 @@ Congrats!
 You finished a Mini puzzle in
 0:23
 		`, time.Second * 23},
+		{`
+		2021/10/12 18:29:20 10:10 cr eS
+Congrats!
+You solved a Mini puzzle in 0 seconds.
+Game for something new?
+Make as many words as you can
+with 7 letters.
+Spelling Bee y
+Tackle today's puzzle.
+		`, time.Second * 0},
 	}
 
 	for _, test := range tests {
