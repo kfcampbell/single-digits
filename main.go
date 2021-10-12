@@ -152,12 +152,13 @@ func run() error {
 
 	scores = sortScores(scores)
 
-	date := time.Now().Format("Jan 2, 2006")
+	// subtract a day so it's the Pacific day instead of the UTC one
+	date := time.Now().Add(-24 * time.Hour).Format("Jan 2, 2006")
 	announcement := fmt.Sprintf(`
 		Results for %v:
-		Winner: %v with a time of %v
-		Second place: %v with a time of %v
-		Third place: %v with a time of %v
+	Winner: %v with a time of %v
+	Second place: %v with a time of %v
+	Third place: %v with a time of %v
 	`, date,
 		scores[0].Author, scores[0].Score,
 		scores[1].Author, scores[1].Score,
