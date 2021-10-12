@@ -1,7 +1,7 @@
 name: post-weekly
 on:
   schedule:
-    - cron: '45 4 * * *'
+    - cron: '48 4 * * *'
   workflow_dispatch:
     inputs:
       tags:
@@ -26,4 +26,4 @@ jobs:
           DISCORD_SERVER_ID: ${{ secrets.DISCORD_SERVER_ID}}
           DISCORD_CHANNEL_ID: ${{ secrets.DISCORD_CHANNEL_ID}}
           DISCORD_OTHER_BOT_ID: ${{ secrets.DISCORD_OTHER_BOT_ID }}
-          ENVIRONMENT: "DEVELOPMENT"
+          ENVIRONMENT: "${{ secrets.ENVIRONMENT }}"
