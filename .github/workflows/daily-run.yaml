@@ -1,0 +1,25 @@
+name: post-weekly
+on:
+  schedule:
+    - cron: '45 4 * * *'
+  workflow_dispatch:
+    inputs:
+      tags:
+        description: 'Test scenario tags'
+jobs:
+  post-weekly:
+    name: Run application
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-go@v2
+        with:
+          go-version: '^1.17.2' # The Go version to download (if necessary) and use.
+      - name: Run application
+        run: go run main.go
+        env:
+          DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
+          DISCORD_SERVER_ID: ${{ secrets.DISCORD_SERVER_ID}}
+          DISCORD_CHANNEL_ID: ${{ secrets.DISCORD_CHANNEL_ID}}
+          DISCORD_OTHER_BOT_ID: ${{ secrets.DISCORD_OTHER_BOT_ID }}
+          ENVIRONMENT: "DEVELOPMENT"

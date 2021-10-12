@@ -33,26 +33,24 @@ func GetText(imgPath string) (string, error) {
 	return text, nil
 }
 
-// todo(kfcampbell): test this function
-func getMostRecentPuzzleAnnouncements(msgs []*discordgo.Message, botId string) (older, newer *discordgo.Message) {
+func sortMessages(msgs []*discordgo.Message) []*discordgo.Message {
+	sort.Slice(msgs, func(i, j int) bool {
+		return msgs[i].Timestamp > msgs[j].Timestamp
+	})
+	return msgs
+}
+
+func getMostRecentPuzzleAnnouncements(msgs []*discordgo.Message, botId string) (*discordgo.Message, *discordgo.Message) {
 	// get the two most recent instances of the other bot's messages
+	botMsgs := make([]*discordgo.Message, 0)
 	for _, msg := range msgs {
 		// get the latest messages from the other bot
 		if msg.Author.ID == botId {
-			// case where we haven't found either yet
-			if older == nil {
-				older = msg
-			}
-			// case where we've found the older message first
-			if newer == nil {
-				newer = msg
-			}
-			if older != nil && newer != nil {
-				return older, newer
-			}
+			botMsgs = append(botMsgs, msg)
 		}
 	}
-	return older, newer
+	botMsgs = sortMessages(botMsgs)
+	return botMsgs[0], botMsgs[1]
 }
 
 // Score represents a single instance of the crossword puzzle
@@ -94,18 +92,22 @@ func run() error {
 		return err
 	}
 
-	older, newer := getMostRecentPuzzleAnnouncements(msgs, otherBotId)
+	recent, past := getMostRecentPuzzleAnnouncements(msgs, otherBotId)
 
 	ocr := gosseract.NewClient()
 	defer ocr.Close()
 
-	scoreMsgs, err := bot.ChannelMessages(dChannelId, 100, older.ID, newer.ID, "")
+	scoreMsgs, err := bot.ChannelMessages(dChannelId, 100, recent.ID, past.ID, "")
 	if err != nil {
 		return err
 	}
 
 	scores := make([]Score, 0)
 	for _, msg := range scoreMsgs {
+		// get rid of these garbage messages
+		if msg.Timestamp >= recent.Timestamp || msg.Timestamp <= past.Timestamp {
+			continue
+		}
 		// case where there's an image
 		if len(msg.Attachments) == 1 {
 			img := msg.Attachments[0]
@@ -138,7 +140,7 @@ func run() error {
 			if err != nil {
 				return err
 			}
-			fmt.Printf("Author: %v, time: %v\n", msg.Author.Username, time)
+			log.Printf("Author: %v, time: %v\n", msg.Author.Username, time)
 			score := &Score{
 				Author:   msg.Author.Username,
 				AuthorId: msg.Author.ID,
@@ -149,16 +151,38 @@ func run() error {
 	}
 
 	scores = sortScores(scores)
-	fmt.Printf("winner: %v with a time of %v\n", scores[0].Author, scores[0].Score)
-	fmt.Printf("second place: %v with a time of %v\n", scores[1].Author, scores[1].Score)
-	fmt.Printf("third place: %v with a time of %v\n", scores[2].Author, scores[2].Score)
+	log.Printf("winner: %v with a time of %v\n", scores[0].Author, scores[0].Score)
+	log.Printf("second place: %v with a time of %v\n", scores[1].Author, scores[1].Score)
+	log.Printf("third place: %v with a time of %v\n", scores[2].Author, scores[2].Score)
+
+	date := time.Now().Format("Jan 2, 2006")
+	announcement := fmt.Sprintf(`
+		Results for %v:
+		Winner: %v with a time of %v
+		Second place: %v with a time of %v
+		Third place: %v with a time of %v
+	`, date,
+		scores[0].Author, scores[0].Score,
+		scores[1].Author, scores[1].Score,
+		scores[2].Author, scores[2].Score)
+
+	fmt.Println(announcement)
+
+	env := os.Getenv("ENVIRONMENT")
+	if env == "PROD" {
+		res, err := bot.ChannelMessageSend(dChannelId, announcement)
+		if err != nil {
+			return err
+		}
+		log.Printf("message sent: %v", res.Content)
+	}
 
 	return nil
 }
 
 func sortScores(scores []Score) []Score {
 	sort.Slice(scores, func(i, j int) bool {
-		return scores[i].Score > scores[j].Score
+		return scores[i].Score < scores[j].Score
 	})
 	return scores
 }
