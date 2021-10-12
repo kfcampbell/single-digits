@@ -151,9 +151,6 @@ func run() error {
 	}
 
 	scores = sortScores(scores)
-	log.Printf("winner: %v with a time of %v\n", scores[0].Author, scores[0].Score)
-	log.Printf("second place: %v with a time of %v\n", scores[1].Author, scores[1].Score)
-	log.Printf("third place: %v with a time of %v\n", scores[2].Author, scores[2].Score)
 
 	date := time.Now().Format("Jan 2, 2006")
 	announcement := fmt.Sprintf(`
