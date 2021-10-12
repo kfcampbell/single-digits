@@ -140,6 +140,10 @@ func run() error {
 			if err != nil {
 				return err
 			}
+			// Discount instanteous completions (the "Eddie Factor")
+			if time == 0 {
+				continue
+			}
 			log.Printf("Author: %v, time: %v\n", msg.Author.Username, time)
 			score := &Score{
 				Author:   msg.Author.Username,
