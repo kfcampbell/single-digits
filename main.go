@@ -156,9 +156,9 @@ func run() error {
 	date := time.Now().Add(-24 * time.Hour).Format("Jan 2, 2006")
 	announcement := fmt.Sprintf(`
 		Results for %v:
-	Winner: %v with a time of %v
-	Second place: %v with a time of %v
-	Third place: %v with a time of %v
+	🥇 - %v with a time of %v
+	🥈 - %v with a time of %v
+	🥉 - %v with a time of %v
 	`, date,
 		scores[0].Author, scores[0].Score,
 		scores[1].Author, scores[1].Score,
