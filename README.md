@@ -15,5 +15,7 @@ DISCORD_OTHER_BOT_ID=...
 ENVIRONMENT=DEV
 ```
 
+- `source .env`
 - `go run main.go` to run main function
 - `go test ./...` to run unit tests
+- Use the VSCode launch.json task for debugging

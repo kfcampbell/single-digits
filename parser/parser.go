@@ -7,6 +7,18 @@ import (
 	"time"
 )
 
+// ContainsValidScore returns true iff we think this is contains a valid
+// score in either the `XX:XX` or the `XX seconds` format.
+func ContainsValidScore(text string) bool {
+	if strings.Contains(text, "puzzle in") {
+		return true
+	}
+	if strings.Contains(text, "seconds") {
+		return true
+	}
+	return false
+}
+
 // GetScoreFromText extracts the time from the boilerplate NYT text
 // and returns it in seconds.
 func GetScoreFromText(text string) (time.Duration, error) {

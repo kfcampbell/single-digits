@@ -136,6 +136,13 @@ func run() error {
 			if err != nil {
 				return err
 			}
+
+			if !parser.ContainsValidScore(text) {
+				// if there's no valid score, assume it's a gif about how great
+				// @kfcampbell is and move on
+				continue
+			}
+
 			time, err := parser.GetScoreFromText(text)
 			if err != nil {
 				return err
