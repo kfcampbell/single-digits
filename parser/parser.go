@@ -28,6 +28,14 @@ func GetScoreFromText(text string) (time.Duration, error) {
 		text = text[strings.Index(text, "puzzle in"):]
 	}
 
+	// strip off the junk at the end where they advertise other games
+	if strings.Contains(text, "!") {
+		text = text[0:strings.Index(text, "!")]
+	}
+	if strings.Contains(text, ".") {
+		text = text[0:strings.Index(text, ".")]
+	}
+
 	// regex to get digits: ([0-9]+)
 	r := regexp.MustCompile("[0-9]+")
 

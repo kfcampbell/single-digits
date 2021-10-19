@@ -41,6 +41,9 @@ Congrats!
 You finished a Mini puzzle in
 0:23
 		`, time.Second * 23},
+		{`
+			C ions!\nongratulations!\nYou solved a Mini puzzle in 26 seconds. :\nGame for something new?\nMake as many words as you can\nwith 7 letters.\nlI O r4
+		`, time.Second * 26},
 	}
 
 	for _, test := range tests {
