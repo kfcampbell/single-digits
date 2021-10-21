@@ -17,5 +17,6 @@ ENVIRONMENT=DEV
 
 - `source .env`
 - `go run main.go` to run main function
+- `go run utils/generate_test_string.go -- testdata/<FILE>` to write the detected text from a file to standard output
 - `go test ./...` to run unit tests
 - Use the VSCode launch.json task for debugging
