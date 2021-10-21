@@ -51,6 +51,9 @@ with 7 letters.
 Spelling Bee y
 Tackle today's puzzle.
 		`, time.Second * 0},
+    {`
+      C ions!\nongratulations!\nYou solved a Mini puzzle in 26 seconds. :\nGame for something new?\nMake as many words as you can\nwith 7 letters.\nlI O r4
+		`, time.Second * 26},
 	}
 
 	for _, test := range tests {
