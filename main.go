@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"sort"
+	"strings"
 	"time"
 
 	"github.com/bwmarrin/discordgo"
@@ -45,7 +46,8 @@ func getMostRecentPuzzleAnnouncements(msgs []*discordgo.Message, botId string) (
 	botMsgs := make([]*discordgo.Message, 0)
 	for _, msg := range msgs {
 		// get the latest messages from the other bot
-		if msg.Author.ID == botId {
+		// make sure they're not GOMLs
+		if msg.Author.ID == botId && strings.Contains(msg.Content, "https://www.nytimes.com/crosswords/game/mini") {
 			botMsgs = append(botMsgs, msg)
 		}
 	}
