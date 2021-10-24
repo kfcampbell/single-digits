@@ -163,10 +163,8 @@ func run() error {
 		}
 	}
 
-	scores = sortScores(scores)
-
-	// subtract a day so it's the Pacific day instead of the UTC one
-	date := time.Now().Add(-24 * time.Hour).Format("Jan 2, 2006")
+	// subtract two days so it's the Pacific day yesterday instead of the UTC day today
+	date := time.Now().Add(-48 * time.Hour).Format("Jan 2, 2006")
 	announcement := fmt.Sprintf(`
 		Results for %v:
 	🥇 - %v with a time of %v
