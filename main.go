@@ -164,7 +164,7 @@ func run() error {
 	}
 
 	// subtract two days so it's the Pacific day yesterday instead of the UTC day today
-	date := time.Now().Add(-48 * time.Hour).Format("Jan 2, 2006")
+	date := time.Now().Add(-24 * time.Hour).Format("Jan 2, 2006")
 	announcement := getWinnersMessage(scores, date)
 	fmt.Println(announcement)
 
