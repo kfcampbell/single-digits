@@ -187,6 +187,7 @@ func sortScores(scores []Score) []Score {
 	return scores
 }
 
+// todo: handle case where there's only three submissions and it includes a tie
 func getWinnersMessage(scores []Score, date string) string {
 	scores = sortScores(scores)
 
