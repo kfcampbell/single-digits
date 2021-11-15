@@ -149,10 +149,12 @@ func run() error {
 			if err != nil {
 				return err
 			}
+
 			// Discount instanteous completions (the "Eddie Factor")
 			if time == 0 {
 				continue
 			}
+
 			log.Printf("Author: %v, time: %v\n", msg.Author.Username, time)
 			score := &Score{
 				Author:   msg.Author.Username,
@@ -212,7 +214,7 @@ func getWinnersMessage(scores []Score, date string) string {
 		🥈 - tie for second! %v and %v with times of %v
 		🥉 - %v with a time of %v
 		`, date,
-			scores[0].Author, scores[0].Author,
+			scores[0].Author, scores[0].Score,
 			scores[1].Author, scores[2].Author, scores[1].Score,
 			scores[3].Author, scores[3].Score)
 	}
