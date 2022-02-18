@@ -15,6 +15,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      - name: Install tessaract OCR
+        run: |
+          apt install tesseract-ocr
+          apt install libtesseract-dev
+
       - name: Run go fmt
         run: "! go fmt ./... | grep . || { echo 'Go not formatted'; exit 1; }"
 
