@@ -51,6 +51,9 @@ func TestGetWinnersMessage(t *testing.T) {
 	tieForFirstManyScores := make([]int, 0, 4)
 	tieForFirstManyScores = append(tieForFirstManyScores, 17, 17, 29, 34)
 
+	tieForSecondManyScores := make([]int, 0, 4)
+	tieForSecondManyScores = append(tieForSecondManyScores, 15, 22, 22, 49)
+
 	cases := []struct {
 		info     string
 		times    []int
@@ -73,6 +76,12 @@ func TestGetWinnersMessage(t *testing.T) {
 		🥇 - tie for first! TestAuthor0 and TestAuthor1 with times of 17s
 		🥉 - TestAuthor2 with a time of 29s
 		🤏 - TestAuthor3 with a time of 34s
+		`},
+		{"tieForSecondManyScores", tieForSecondManyScores, `
+		Results for tieForSecondManyScores:
+		🥇 - TestAuthor0 with a time of 15s
+		🥈 - tie for second! TestAuthor1 and TestAuthor2 with times of 22s
+		🤏 - TestAuthor3 with a time of 49s
 		`},
 	}
 

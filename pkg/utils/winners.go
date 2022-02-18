@@ -31,7 +31,7 @@ func GetWinnersMessage(scores []sc.Score, title string) string {
 		Results for %v:
 		🥇 - %v with a time of %v
 		🥈 - tie for second! %v and %v with times of %v
-		🥉 - %v with a time of %v
+		🤏 - %v with a time of %v
 		`, title,
 			scores[0].Author, scores[0].Score,
 			scores[1].Author, scores[2].Author, scores[1].Score,
