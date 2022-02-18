@@ -11,7 +11,9 @@ import (
 	"time"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/kfcampbell/single-digits/parser"
+	"github.com/kfcampbell/single-digits/pkg/parser"
+	sc "github.com/kfcampbell/single-digits/pkg/score"
+	"github.com/kfcampbell/single-digits/pkg/utils"
 	"github.com/otiai10/gosseract/v2"
 )
 
@@ -53,13 +55,6 @@ func getMostRecentPuzzleAnnouncements(msgs []*discordgo.Message, botId string) (
 	}
 	botMsgs = sortMessages(botMsgs)
 	return botMsgs[0], botMsgs[1]
-}
-
-// Score represents a single instance of the crossword puzzle
-type Score struct {
-	Author   string
-	AuthorId string
-	Score    time.Duration
 }
 
 func run() error {
@@ -104,7 +99,7 @@ func run() error {
 		return err
 	}
 
-	scores := make([]Score, 0)
+	scores := make([]sc.Score, 0)
 	for _, msg := range scoreMsgs {
 		// get rid of these garbage messages
 		if msg.Timestamp >= recent.Timestamp || msg.Timestamp <= past.Timestamp {
@@ -150,13 +145,13 @@ func run() error {
 				return err
 			}
 
-			// Discount instanteous completions (the "Eddie Factor")
+			// Discount instantaneous completions (the "Eddie Factor")
 			if time == 0 {
 				continue
 			}
 
 			log.Printf("Author: %v, time: %v\n", msg.Author.Username, time)
-			score := &Score{
+			score := &sc.Score{
 				Author:   msg.Author.Username,
 				AuthorId: msg.Author.ID,
 				Score:    time,
@@ -167,7 +162,7 @@ func run() error {
 
 	// subtract two days so it's the Pacific day yesterday instead of the UTC day today
 	date := time.Now().Add(-48 * time.Hour).Format("Jan 2, 2006")
-	announcement := getWinnersMessage(scores, date)
+	announcement := utils.GetWinnersMessage(scores, date)
 	fmt.Println(announcement)
 
 	env := os.Getenv("ENVIRONMENT")
@@ -180,65 +175,4 @@ func run() error {
 	}
 
 	return nil
-}
-
-func sortScores(scores []Score) []Score {
-	sort.Slice(scores, func(i, j int) bool {
-		return scores[i].Score < scores[j].Score
-	})
-	return scores
-}
-
-// todo: handle case where there's only three submissions and it includes a tie
-func getWinnersMessage(scores []Score, date string) string {
-	scores = sortScores(scores)
-
-	// tie for first place
-	if scores[0].Score == scores[1].Score {
-		return fmt.Sprintf(`
-		Results for %v:
-		🥇 - tie for first! %v and %v with times of %v
-		🥈 - %v with a time of %v
-		🥉 - %v with a time of %v
-		`, date,
-			scores[0].Author, scores[1].Author, scores[0].Score,
-			scores[2].Author, scores[2].Score,
-			scores[3].Author, scores[3].Score)
-	}
-
-	// tie for second place
-	if scores[1].Score == scores[2].Score {
-		return fmt.Sprintf(`
-		Results for %v:
-		🥇 - %v with a time of %v
-		🥈 - tie for second! %v and %v with times of %v
-		🥉 - %v with a time of %v
-		`, date,
-			scores[0].Author, scores[0].Score,
-			scores[1].Author, scores[2].Author, scores[1].Score,
-			scores[3].Author, scores[3].Score)
-	}
-
-	// tie for third place
-	if len(scores) > 3 && scores[2].Score == scores[3].Score {
-		return fmt.Sprintf(`
-		Results for %v:
-		🥇 - %v with a time of %v
-		🥈 - %v with a time of %v
-		🥉 - tie for third! %v and %v with times of %v
-		`, date,
-			scores[0].Author, scores[0].Score,
-			scores[1].Author, scores[1].Score,
-			scores[2].Author, scores[3].Author, scores[2].Score)
-	}
-	return fmt.Sprintf(`
-		Results for %v:
-	🥇 - %v with a time of %v
-	🥈 - %v with a time of %v
-	🥉 - %v with a time of %v
-	`, date,
-		scores[0].Author, scores[0].Score,
-		scores[1].Author, scores[1].Score,
-		scores[2].Author, scores[2].Score)
-
 }
