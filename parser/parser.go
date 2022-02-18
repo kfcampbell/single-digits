@@ -8,7 +8,7 @@ import (
 )
 
 // ContainsValidScore returns true iff we think this is contains a valid
-// score in either the `XX:XX` or the `XX seconds` format.
+// score based on the usual NYT puzzle phrasing
 func ContainsValidScore(text string) bool {
 	if strings.Contains(text, "puzzle in") {
 		return true
