@@ -9,7 +9,7 @@ import (
 // GetWinnersMessage takes a list of Score structs, sorts them, and returns
 // a nicely formatted podium string.
 // todo: handle case where there's only three submissions and it includes a tie
-func GetWinnersMessage(scores []sc.Score, date string) string {
+func GetWinnersMessage(scores []sc.Score, title string) string {
 	scores = sc.SortScores(scores)
 
 	// tie for first place
@@ -19,7 +19,7 @@ func GetWinnersMessage(scores []sc.Score, date string) string {
 		🥇 - tie for first! %v and %v with times of %v
 		🥈 - %v with a time of %v
 		🥉 - %v with a time of %v
-		`, date,
+		`, title,
 			scores[0].Author, scores[1].Author, scores[0].Score,
 			scores[2].Author, scores[2].Score,
 			scores[3].Author, scores[3].Score)
@@ -32,7 +32,7 @@ func GetWinnersMessage(scores []sc.Score, date string) string {
 		🥇 - %v with a time of %v
 		🥈 - tie for second! %v and %v with times of %v
 		🥉 - %v with a time of %v
-		`, date,
+		`, title,
 			scores[0].Author, scores[0].Score,
 			scores[1].Author, scores[2].Author, scores[1].Score,
 			scores[3].Author, scores[3].Score)
@@ -45,7 +45,7 @@ func GetWinnersMessage(scores []sc.Score, date string) string {
 		🥇 - %v with a time of %v
 		🥈 - %v with a time of %v
 		🥉 - tie for third! %v and %v with times of %v
-		`, date,
+		`, title,
 			scores[0].Author, scores[0].Score,
 			scores[1].Author, scores[1].Score,
 			scores[2].Author, scores[3].Author, scores[2].Score)
@@ -55,9 +55,8 @@ func GetWinnersMessage(scores []sc.Score, date string) string {
 	🥇 - %v with a time of %v
 	🥈 - %v with a time of %v
 	🥉 - %v with a time of %v
-	`, date,
+	`, title,
 		scores[0].Author, scores[0].Score,
 		scores[1].Author, scores[1].Score,
 		scores[2].Author, scores[2].Score)
-
 }
