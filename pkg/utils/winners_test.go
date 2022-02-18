@@ -71,8 +71,8 @@ func TestGetWinnersMessage(t *testing.T) {
 		{"tieForFirstManyScores", tieForFirstManyScores, `
 		Results for tieForFirstManyScores:
 		🥇 - tie for first! TestAuthor0 and TestAuthor1 with times of 17s
-		🥈 - TestAuthor2 with a time of 29s
-		🥉 - TestAuthor3 with a time of 34s
+		🥉 - TestAuthor2 with a time of 29s
+		🤏 - TestAuthor3 with a time of 34s
 		`},
 	}
 
