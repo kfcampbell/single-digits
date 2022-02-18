@@ -150,7 +150,7 @@ func run() error {
 				return err
 			}
 
-			// Discount instanteous completions (the "Eddie Factor")
+			// Discount instantaneous completions (the "Eddie Factor")
 			if time == 0 {
 				continue
 			}
