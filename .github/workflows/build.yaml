@@ -1,0 +1,28 @@
+name: "Build and test"
+
+on:
+  push:
+    branches: [main]
+  pull_request: {}
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Run go fmt
+        run: "! go fmt ./... | grep . || { echo 'Go not formatted'; exit 1; }"
+
+      - name: Run go vet
+        run: "go vet ./..."
+
+      - name: Build program
+        run: go build ./...
+
+      - name: Run tests
+        run: go test ./...
