@@ -43,19 +43,37 @@ func getTestWinners(times []time.Duration) []sc.Score {
 func TestGetWinnersMessage(t *testing.T) {
 
 	simpleThreeScores := make([]int, 0, 3)
-	simpleThreeScores = append(simpleThreeScores, 35, 45, 55)
+	simpleThreeScores = append(simpleThreeScores, 45, 55, 35)
+
+	simpleMoreScores := make([]int, 0, 8)
+	simpleMoreScores = append(simpleMoreScores, 32, 68, 92, 13, 48, 36, 29, 42)
+
+	tieForFirstManyScores := make([]int, 0, 4)
+	tieForFirstManyScores = append(tieForFirstManyScores, 17, 17, 29, 34)
 
 	cases := []struct {
 		info     string
 		times    []int
 		expected string
 	}{
-		{"only 3 scores happy case", simpleThreeScores, `
-		Results for only 3 scores happy case:
-	🥇 - TestAuthor0 with a time of 35s
-	🥈 - TestAuthor1 with a time of 45s
-	🥉 - TestAuthor2 with a time of 55s
+		{"simpleThreeScores", simpleThreeScores, `
+		Results for simpleThreeScores:
+	🥇 - TestAuthor2 with a time of 35s
+	🥈 - TestAuthor0 with a time of 45s
+	🥉 - TestAuthor1 with a time of 55s
 	`},
+		{"simpleMoreScores", simpleMoreScores, `
+		Results for simpleMoreScores:
+	🥇 - TestAuthor3 with a time of 13s
+	🥈 - TestAuthor6 with a time of 29s
+	🥉 - TestAuthor0 with a time of 32s
+	`},
+		{"tieForFirstManyScores", tieForFirstManyScores, `
+		Results for tieForFirstManyScores:
+		🥇 - tie for first! TestAuthor0 and TestAuthor1 with times of 17s
+		🥈 - TestAuthor2 with a time of 29s
+		🥉 - TestAuthor3 with a time of 34s
+		`},
 	}
 
 	for _, tc := range cases {
