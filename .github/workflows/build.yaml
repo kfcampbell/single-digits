@@ -17,8 +17,8 @@ jobs:
 
       - name: Install tessaract OCR
         run: |
-          apt install tesseract-ocr
-          apt install libtesseract-dev
+          sudo apt install tesseract-ocr
+          sudo apt install libtesseract-dev
 
       - name: Run go fmt
         run: "! go fmt ./... | grep . || { echo 'Go not formatted'; exit 1; }"
