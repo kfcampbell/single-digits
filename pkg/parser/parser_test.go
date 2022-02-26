@@ -54,6 +54,21 @@ Tackle today's puzzle.
 		{`
       C ions!\nongratulations!\nYou solved a Mini puzzle in 26 seconds. :\nGame for something new?\nMake as many words as you can\nwith 7 letters.\nlI O r4
 		`, time.Second * 26},
+		{`
+		2022/02/26 15:13:07 8:02 A tO ie oermots hl |
+Gan | MN iaieKeelan) re H
+x
+Congratulations!
+You solved The Mini
+in 41 seconds.
+Game for something new?
+Make as many words as you can
+with 7 letters.
+Spelling Bee
+wae >
+Tackle today's puzzle.
+Hi O <
+`, time.Second * 41},
 	}
 
 	for _, test := range tests {
