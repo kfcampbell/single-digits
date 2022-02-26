@@ -26,6 +26,8 @@ func GetScoreFromText(text string) (time.Duration, error) {
 	// strip off the colon in the header time if it exists
 	if strings.Contains(text, "puzzle in") {
 		text = text[strings.Index(text, "puzzle in"):]
+	} else if strings.Contains(text, "The Mini") {
+		text = text[strings.Index(text, "The Mini"):]
 	}
 
 	// strip off the junk at the end where they advertise other games
