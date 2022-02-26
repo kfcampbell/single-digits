@@ -69,6 +69,22 @@ wae >
 Tackle today's puzzle.
 Hi O <
 `, time.Second * 41},
+		{`
+2022/02/26 15:18:46 7 OY tO ie om oloy |
+Gn | MN eanesKeeran) rs A
+x
+C lations!
+ongratulations:
+You solved The Mini
+in 1:21.
+Game for something new?
+Make as many words as you can
+with 7 letters.
+Spelling Bee
+B p g »
+Tackle today's puzzle.
+III O <
+`, (time.Minute*1 + time.Second*21)},
 	}
 
 	for _, test := range tests {
