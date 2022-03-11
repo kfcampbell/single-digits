@@ -85,6 +85,21 @@ B p g »
 Tackle today's puzzle.
 III O <
 `, (time.Minute*1 + time.Second*21)},
+		{`
+2022/03/10 23:29:31 12:18 tO cs eee nek
+Gn | MN eanesKeeran) rs H
+x
+Congratulations!
+You solved TheMini
+in 18 seconds.
+Game for something new?
+Make as many words as you can
+with 7 letters.
+Spelling Bee
+B p g »
+Tackle today's puzzle.
+II O <
+`, time.Second * 18},
 	}
 
 	for _, test := range tests {
