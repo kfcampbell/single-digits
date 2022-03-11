@@ -31,6 +31,8 @@ func GetScoreFromText(text string) (time.Duration, error) {
 		text = text[strings.Index(text, "puzzle in"):]
 	} else if strings.Contains(text, "The Mini") {
 		text = text[strings.Index(text, "The Mini"):]
+	} else if strings.Contains(text, "TheMini") {
+		text = text[strings.Index(text, "TheMini"):]
 	}
 
 	// strip off the junk at the end where they advertise other games

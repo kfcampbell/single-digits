@@ -38,7 +38,7 @@ func GetText(imgPath string) (string, error) {
 
 func sortMessages(msgs []*discordgo.Message) []*discordgo.Message {
 	sort.Slice(msgs, func(i, j int) bool {
-		return msgs[i].Timestamp > msgs[j].Timestamp
+		return msgs[i].Timestamp < msgs[j].Timestamp
 	})
 	return msgs
 }
@@ -53,7 +53,6 @@ func getMostRecentPuzzleAnnouncements(msgs []*discordgo.Message, botId string) (
 			botMsgs = append(botMsgs, msg)
 		}
 	}
-	botMsgs = sortMessages(botMsgs)
 	return botMsgs[0], botMsgs[1]
 }
 
@@ -98,6 +97,7 @@ func run() error {
 	if err != nil {
 		return err
 	}
+	scoreMsgs = sortMessages(scoreMsgs)
 
 	scores := make([]sc.Score, 0)
 	for _, msg := range scoreMsgs {
@@ -147,6 +147,17 @@ func run() error {
 
 			// Discount instantaneous completions (the "Eddie Factor")
 			if time == 0 {
+				continue
+			}
+
+			// determine if andrew cheated again by submitting two scores
+			andrewCheated := false
+			for _, sc := range scores {
+				if sc.Author == msg.Author.Username {
+					andrewCheated = true
+				}
+			}
+			if andrewCheated {
 				continue
 			}
 
