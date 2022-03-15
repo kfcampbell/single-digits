@@ -19,6 +19,9 @@ func ContainsValidScore(text string) bool {
 	if strings.Contains(text, "The Mini") {
 		return true
 	}
+	if strings.Contains(text, "TheMini") {
+		return true
+	}
 	return false
 }
 
