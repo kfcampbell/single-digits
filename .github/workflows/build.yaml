@@ -17,6 +17,7 @@ jobs:
 
       - name: Install tessaract OCR
         run: |
+          sudo apt-get update
           sudo apt install tesseract-ocr
           sudo apt install libtesseract-dev
 
