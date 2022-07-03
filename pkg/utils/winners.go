@@ -11,7 +11,31 @@ import (
 // todo: handle case where there's only three submissions and it includes a tie
 func GetWinnersMessage(scores []sc.Score, title string) string {
 	scores = sc.SortScores(scores)
-
+	  //case where only one time is submitted for a day
+	if len(scores) == 1 {
+		return fmt.Sprintf(`
+		Results for %v:
+		🥇 - by default, %v is the winner with a time of %v
+		`, title,
+			scores[0].Author,scores[0].Score)
+	}
+	  //case where only two times are submitted for a day
+	if len(scores) ==  2 {
+		if scores[0].Score == scores[1].Score {
+			return fmt.Sprintf(`
+			Results for %v:
+			🥇 - tie for first! %v and %v with times of %v
+			`, title, 
+			  scores[0].Author, scores[1].Author,scores[0].Score)
+		}
+		return fmt.Sprintf(`
+		Results for %v:
+		🥇 - %v with a time of %v
+		🥈 - %v with a time of %v
+		`, title,
+			scores[0].Author, scores[0].Score,
+			scores[1].Author, scores[1].Score)
+	}
 	// tie for first place
 	if scores[0].Score == scores[1].Score {
 		return fmt.Sprintf(`
