@@ -54,6 +54,15 @@ func TestGetWinnersMessage(t *testing.T) {
 	tieForSecondManyScores := make([]int, 0, 4)
 	tieForSecondManyScores = append(tieForSecondManyScores, 15, 22, 22, 49)
 
+	simpleTwoScores := make([]int, 0, 2)
+	simpleTwoScores = append(simpleTwoScores, 45, 55)
+
+	twoScoresTie := make([]int, 0, 2)
+	twoScoresTie = append(twoScoresTie, 30, 30)
+
+	simpleOneScore := make([]int, 0, 1)
+	simpleOneScore = append(simpleOneScore, 19)
+
 	cases := []struct {
 		info     string
 		times    []int
@@ -82,6 +91,21 @@ func TestGetWinnersMessage(t *testing.T) {
 		🥇 - TestAuthor0 with a time of 15s
 		🥈 - tie for second! TestAuthor1 and TestAuthor2 with times of 22s
 		🤏 - TestAuthor3 with a time of 49s
+		`},
+		{"simpleTwoScores", simpleTwoScores, `
+		Results for simpleTwoScores:
+		🥇 - TestAuthor0 with a time of 45s
+		🥈 - TestAuthor1 with a time of 55s
+		`},
+		//whitespace formatting on this case is a lil jank bc the source code has
+		//more indentation(should probably be running a trim on these strings but oh well)
+		{"twoScoresTie", twoScoresTie, `
+			Results for twoScoresTie:
+			🥇 - tie for first! TestAuthor0 and TestAuthor1 with times of 30s
+			`},
+		{"simpleOneScore", simpleOneScore, `
+		Results for simpleOneScore:
+		🥇 - by default, TestAuthor0 is the winner with a time of 19s
 		`},
 	}
 
