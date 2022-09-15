@@ -100,6 +100,19 @@ B p g »
 Tackle today's puzzle.
 II O <
 `, time.Second * 18},
+		{`
+2022/09/15 10:58:32 12:20 7 4 019%
+> Gen Mi atentscneelen re F
+Back to puzzle X
+Congratulations!
+You solved TheMini
+in 4] seconds.
+View all games
+fF Share your score
+Have you played our new matching game?
+It’s mesmerizing.
+Try Tiles >>
+`, time.Second * 41},
 	}
 
 	for _, test := range tests {
